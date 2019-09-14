@@ -1,3 +1,8 @@
+
+library(dplyr)
+library(tidyr)
+
+
 data<-read.csv('https://raw.githubusercontent.com/ferdeh/machine_learning_3/master/Online%20Retail.csv',na.strings = c("","NA"))
 head(data)
 
@@ -72,8 +77,36 @@ head(data5)
 
 dataset5<-data5
 
+names(data5)
+sum(is.na(data5$CustomerID))
+data6<-data5
+data6$CustomerID<-as.character(data6$CustomerID)
+sum(is.na(data6$CustomerID))
 
 #data preprocessing is done!
+#Recode variable
+
+data_clean <- data5 %>% 
+  mutate(InvoiceNo=as.factor(InvoiceNo), StockCode=as.factor(StockCode), 
+         InvoiceDate=as.Date(InvoiceDate, '%m/%d/%Y %H:%M'), CustomerID=as.factor(CustomerID), 
+         Country=as.factor(Country))
+data_clean <- data_clean %>% mutate(total_price = Quantity*UnitPrice)
+head(data_clean)
+
+
+#Reformat data to RFM format
+
+data_RFM <- data_clean %>% 
+  group_by(CustomerID) %>% 
+  summarise(recency=as.numeric(as.Date("2012-01-01")-max(InvoiceDate)),
+            frequency=n_distinct(InvoiceNo), monitery= sum(total_price)/n_distinct(InvoiceNo))
+
+summary(data_RFM)
+print("Berikut adalah data RFM dari data online retail yang sudah di reformat")
+print(head(data_RFM))
+
+
+###
 
 library(plyr)
 library(arules)
@@ -122,4 +155,4 @@ basket_rules4 = apriori(baskets, parameter=list(supp=0.01,conf = 0.7),
 basket_rules4 = sort(basket_rules4, decreasing=TRUE,by="confidence")
 summary(basket_rules4)
 inspect(basket_rules4)
-
+###
