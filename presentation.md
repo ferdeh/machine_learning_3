@@ -1,9 +1,51 @@
-# Customer Segementation 
-## Metode yang digunakan dalam melakukan Segmentasi Pelanggan adalah dengan metode RFM Analysis
-## Tujuan dari Analysis ini adalah :
-## Mengenali siapa customer yang paling berharga 
-## Mempelajari behavior dari pelangan
-## Meningkatkan Retensi pelanggan dan revenue perusahaan
+Customer Segementation
+========================================================
+author: Ferdiansyah
+date: 15 September 2019
+autosize: true
+
+Business Understanding 
+========================================================
+
+On Line Retail adalah perusahaan yang menjual segala macam jenis barang secara online.
+Untuk menentukan strategi marketing yang tepat dan pengembangan bisnis perlu dilakukan analisa terhadap data pelanggan. Analisa ini dilakukan dengan tujuan antara lain :
+
+- Mengenali siapa customer yang paling berharga 
+- Mempelajari behavior dari pelangan
+- Meningkatkan Retensi pelanggan dan revenue perusahaan
+
+
+Data Understanding
+========================================================
+
+
+```r
+library(dplyr)
+library(plotly)
+library(factoextra)
+library(corrplot)
+
+# Data Preparation
+data<-read.csv('https://raw.githubusercontent.com/arikunco/machinelearning/master/dataset/online_retail_clean.csv')
+
+ head(data)
+```
+
+```
+  CustomerID  recency frequency monetary
+1      12680 21.46528         2    68.40
+2      15311 21.50000        36  1081.75
+3      14446 21.51806         3    18.26
+4      12518 21.57431         4   124.38
+5      14441 21.62014         1    59.40
+6      13883 22.19444         3    32.95
+```
+
+Slide With Plot
+========================================================
+
+![plot of chunk unnamed-chunk-2](presentation-figure/unnamed-chunk-2-1.png)
+
 
 
 # Import Library
@@ -53,7 +95,6 @@ plot(d) # plots the results
 df_encode$recency_l <- log10(df_encode$recency+0.1)
 df_encode$frequency_l <- log10(df_encode$frequency)
 df_encode$monetary_l <- log10(df_encode$monetary+0.1)
-
 
 d <- density(df_encode$recency_l) # returns the density data recency 
 plot(d) # plots the results
@@ -134,7 +175,6 @@ p
 
 
 
-head(df_encode)
 # RFM Model menggunakan Kmean
 
 ## Dikarenakan hanya terdapat korelasi antara Frequency dan Monetary maka clustring hanya dihitung dengan mempertimbangkan varible frequency dan monetary
@@ -172,6 +212,8 @@ head(df_encode)
 ### Cluster pertama adalah cluster customer dengan monetary dan frequensi rendah
 ### Cluster kedua adalah cluster customer dengan frequency dan monetary tinggi
 ### 
+
+
 
 
 
